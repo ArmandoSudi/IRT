@@ -11,14 +11,23 @@ import com.google.gson.annotations.SerializedName;
  * Created by Sugar on 11/22/2018
  */
 @Entity(tableName = "EQUIPEMENT", foreignKeys =  {
-        @ForeignKey(entity = TypeEquipement.class, parentColumns = "CODE_TYPE_EQUIPEMENT", childColumns = "CODE_TYPE_EQUIPEMENT")
+        @ForeignKey(entity = SiteFormation.class, parentColumns = "CODE_SITE_FORMATION", childColumns = "CODE_SITE_FORMATION")
 })
 public class Equipement {
     @PrimaryKey
+    @ColumnInfo(name = "CODE_EQUIPEMENT")
+    @SerializedName("CODE_EQUIPEMENT")
+    public String codeEquipement;
     @ColumnInfo(name = "NUMERO_SERIE")
     @SerializedName("NUMERO_SERIE")
     public String numeroSerie;
-    @ColumnInfo(name = "CODE_TYPE_EQUIPEMENT")
-    @SerializedName("CODE_TYPE_EQUIPEMENT")
-    public String codeTypeEquipement;
+    @ColumnInfo(name = "DESCRIPTION")
+    @SerializedName("DESCRIPTION")
+    public String description;
+    @ColumnInfo(name = "TYPE_EQUIPEMENT")
+    @SerializedName("TYPE_EQUIPEMENT")
+    public String typeEquipement;
+    @ColumnInfo(name = "CODE_SITE_FORMATION")
+    @SerializedName("CODE_SITE_FORMATION")
+    public String codeSiteFormation;
 }

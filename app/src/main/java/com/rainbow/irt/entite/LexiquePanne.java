@@ -7,14 +7,14 @@ import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Sugar on 11/22/2018
+ * Created by Sugar on 11/24/2018
  */
-@Entity(tableName = "TYPE_EQUIPEMENT")
-public class TypeEquipement {
+@Entity(tableName = "LEXIQUE_PANNE")
+public class LexiquePanne {
     @PrimaryKey
-    @ColumnInfo(name = "CODE_TYPE_EQUIPEMENT")
-    @SerializedName("CODE_TYPE_EQUIPEMENT")
-    public String codeTypeEquipement;
+    @ColumnInfo(name = "CODE_LEXIQUE_PANNE")
+    @SerializedName("CODE_LEXIQUE_PANNE")
+    public String codeLexiquePanne;
     @ColumnInfo(name = "LIBELLE")
     @SerializedName("LIBELLE")
     public String libelle;
