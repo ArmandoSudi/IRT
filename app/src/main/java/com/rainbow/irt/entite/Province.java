@@ -3,6 +3,7 @@ package com.rainbow.irt.entite;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -14,6 +15,7 @@ public class Province {
     @PrimaryKey
     @ColumnInfo(name = "CODE_PROVINCE")
     @SerializedName("CODE_PROVINCE")
+    @NonNull
     public String codeProvince;
     @ColumnInfo(name = "LIBELLE")
     @SerializedName("LIBELLE")

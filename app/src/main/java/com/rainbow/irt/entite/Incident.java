@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -15,12 +16,13 @@ import java.util.Date;
 @Entity(tableName = "INCIDENT", foreignKeys = {
         @ForeignKey(entity = LexiquePanne.class, parentColumns = "CODE_LEXIQUE_PANNE", childColumns = "CODE_LEXIQUE_PANNE"),
         @ForeignKey(entity = Utilisateur.class, parentColumns = "CODE_UTILISATEUR", childColumns = "CODE_UTILISATEUR"),
-        @ForeignKey(entity = Equipement.class, parentColumns = "CODE_EQUIPEMENT", childColumns = "EQUIPEMENT")
+        @ForeignKey(entity = Equipement.class, parentColumns = "CODE_EQUIPEMENT", childColumns = "CODE_EQUIPEMENT")
 })
 public class Incident {
     @PrimaryKey
     @ColumnInfo(name = "CODE_INCIDENT")
     @SerializedName("CODE_INCIDENT")
+    @NonNull
     public String codeIncident;
     @ColumnInfo(name = "CODE_EQUIPEMENT")
     @SerializedName("CODE_EQUIPEMENT")

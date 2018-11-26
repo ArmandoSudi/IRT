@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +18,7 @@ public class TerritoireVille {
     @PrimaryKey
     @ColumnInfo(name = "CODE_TERRITOIRE_VILLE")
     @SerializedName("CODE_TERRITOIRE_VILLE")
+    @NonNull
     public String codeTerritoireVille;
     @ColumnInfo(name = "CODE_PROVINCE")
     @SerializedName("CODE_PROVINCE")

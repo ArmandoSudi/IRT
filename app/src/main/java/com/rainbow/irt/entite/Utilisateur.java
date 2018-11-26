@@ -19,6 +19,7 @@ public class Utilisateur {
     @PrimaryKey
     @ColumnInfo(name = "CODE_UTILISATEUR")
     @SerializedName("CODE_UTILISATEUR")
+    @NonNull
     public String codeUtilisateur;
     @ColumnInfo(name = "NOM")
     @SerializedName("NOM")

@@ -1,5 +1,6 @@
 package com.rainbow.irt.dao;
 
+import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -11,7 +12,8 @@ import com.rainbow.irt.entite.UtilisateurL1;
 /**
  * Created by Sugar on 11/24/2018
  */
-public interface IUtilisateurL1 {
+@Dao
+public interface IUtilisateurL1Dao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long[] insert(UtilisateurL1...utilisateurL1s);
 

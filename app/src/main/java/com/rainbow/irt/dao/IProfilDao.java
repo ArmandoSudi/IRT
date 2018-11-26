@@ -7,6 +7,8 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.rainbow.irt.entite.Profil;
+
 /**
  * Created by Sugar on 11/23/2018
  */
@@ -14,13 +16,13 @@ import android.arch.persistence.room.Update;
 public interface IProfilDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    long[] insert(IProfilDao...profils);
+    long[] insert(Profil...profils);
 
     @Update
-    int update(IProfilDao...profils);
+    int update(Profil...profils);
 
     @Delete
-    void delete(IProfilDao...profils);
+    void delete(Profil...profils);
 
     @Query("DELETE FROM PROFIL")
     void deleteAll();

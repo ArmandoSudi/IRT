@@ -3,6 +3,7 @@ package com.rainbow.irt.entite;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -18,8 +19,10 @@ import com.google.gson.annotations.SerializedName;
 public class UtilisateurTCV {
     @ColumnInfo(name = "CODE_BUREAU_VOTE")
     @SerializedName("CODE_BUREAU_VOTE")
+    @NonNull
     public String codeBureauVote;
     @ColumnInfo(name = "CODE_UTILISATEUR")
     @SerializedName("CODE_UTILISATEUR")
+    @NonNull
     public String codeUtilisateur;
 }

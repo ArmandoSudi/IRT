@@ -4,11 +4,25 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.rainbow.irt.dao.IBureauVoteDao;
+import com.rainbow.irt.dao.IBureauVoteEquipementDao;
+import com.rainbow.irt.dao.IEquipementDao;
+import com.rainbow.irt.dao.IIncidentDao;
+import com.rainbow.irt.dao.ILexiquePanneDao;
+import com.rainbow.irt.dao.IProfilDao;
+import com.rainbow.irt.dao.IProvinceDao;
+import com.rainbow.irt.dao.ISiteFormationDao;
+import com.rainbow.irt.dao.ISiteVoteDao;
+import com.rainbow.irt.dao.IStatutEquipementDao;
+import com.rainbow.irt.dao.ITerritoireVilleDao;
+import com.rainbow.irt.dao.IUtilisateurDao;
+import com.rainbow.irt.dao.IUtilisateurL1Dao;
+import com.rainbow.irt.dao.IUtilisateurL2L3Dao;
+import com.rainbow.irt.dao.IUtilisateurTCVDao;
 import com.rainbow.irt.entite.BureauVote;
 import com.rainbow.irt.entite.BureauVoteEquipement;
 import com.rainbow.irt.entite.Equipement;
@@ -74,5 +88,21 @@ public abstract class IrtDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    public abstract IUtilisateurDao getIUtilisateurDao();
+    public abstract IProfilDao getIProfileDao();
+    public abstract ISiteFormationDao getISiteFormationDao();
+    public abstract ISiteVoteDao getISiteVoteDao();
+    public abstract IProvinceDao getIProvinceDao();
+    public abstract IUtilisateurL2L3Dao getIUtilisateurL2L3Dao();
+    public abstract IUtilisateurTCVDao getIUtilisateurTCVDao();
+    public abstract IEquipementDao getIEquipementDao();
+    public abstract IBureauVoteEquipementDao getIBureauVoteEquipementDao();
+    public abstract IIncidentDao getIIncidentDao();
+    public abstract ITerritoireVilleDao getITerritoireVilleDao();
+    public abstract IBureauVoteDao getIBureauVoteDao();
+    public abstract IUtilisateurL1Dao getIUtilisateurL1Dao();
+    public abstract ILexiquePanneDao getILexiquePanneDao();
+    public abstract IStatutEquipementDao getIStatutEquipementDao();
 
 }

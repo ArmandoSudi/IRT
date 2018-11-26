@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +18,7 @@ public class SiteFormation {
     @PrimaryKey
     @ColumnInfo(name = "CODE_SITE_FORMATION")
     @SerializedName("CODE_SITE_FORMATION")
+    @NonNull
     public String codeSiteFormation;
     @ColumnInfo(name = "LIBELLE")
     @SerializedName("LIBELLE")
