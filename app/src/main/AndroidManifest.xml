@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".CheckingActivity" />
-        <activity android:name=".DetailsEquipementActivity"></activity>
+        <activity android:name=".DetailsEquipementActivity" />
+        <activity android:name=".LogIncidentActivity" />
+        <activity android:name=".AffecterEquipementActivity"></activity>
     </application>
 
 </manifest>

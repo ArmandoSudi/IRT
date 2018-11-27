@@ -1,5 +1,6 @@
 package com.rainbow.irt;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,9 +25,13 @@ public class DetailsEquipementActivity extends AppCompatActivity {
 
     public void logIncident(View v) {
         Toast.makeText(this, "Enregistrer incident", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, LogIncidentActivity.class);
+        startActivity(intent);
     }
 
     public void affectEquipement(View v) {
         Toast.makeText(this, "Affecter equipement", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, AffecterEquipementActivity.class);
+        startActivity(intent);
     }
 }

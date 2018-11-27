@@ -29,4 +29,10 @@ public class BureauVote {
     @ColumnInfo(name = "CENTRE_VOTE")
     @SerializedName("CENTRE_VOTE")
     public String centreVote;
+
+    public BureauVote(String libelle, String codeSiteVote, String centreVote) {
+        this.libelle = libelle;
+        this.codeSiteVote = codeSiteVote;
+        this.centreVote = centreVote;
+    }
 }

@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">IRT</string>
+
+    <string-array name="pannes">
+        <item>panne 1</item>
+        <item>panne 2</item>
+        <item>panne 3</item>
+    </string-array>
+
+    <string-array name="provinces">
+        <item>Sud Kivu</item>
+        <item>Nord Kivu</item>
+        <item>Kinshasa</item>
+        <item>Bas Uele</item>
+        <item>Haut Katanga</item>
+        <item>Sud Ubangi</item>
+    </string-array>
+
+    <string-array name="villes">
+        <item>Bukavu</item>
+        <item>Goma</item>
+        <item>Lukunga</item>
+        <item>Fizi</item>
+    </string-array>
+
 </resources>
