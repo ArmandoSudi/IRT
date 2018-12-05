@@ -95,16 +95,9 @@ public class CheckingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_populate_equipement) {
-//            new PopulateDBAsyncTask(this).execute();
-        } else if (id == R.id.action_affect_equipement) {
-//            mEquipementAAffecter.addAll(mEquipementAdapter.getEquipementAAffecter());
-            AffecterEquipement(mEquipementAdapter.getEquipementAAffecter());
-        } else if (id == R.id.action_list_tcv) {
+        if (id == R.id.action_list_tcv) {
             Intent intent =  new Intent(this, UtilisateurListActivity.class);
             startActivity(intent);
-        } else if (id == R.id.action_peek_db) {
-            new LoadEquipementData(this).execute();
         } else if (id == R.id.action_view_affectation) {
             Intent intent =  new Intent(this, AffectationListActivity.class);
             startActivity(intent);

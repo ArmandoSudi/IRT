@@ -56,7 +56,7 @@ public class UtilisateurAdapter extends RecyclerView.Adapter<UtilisateurAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VH vh, int i) {
+    public void onBindViewHolder(@NonNull VH vh, final int i) {
         final Utilisateur utilisateur = mUtilisateurList.get(i);
 
         //TODO Ajouter prenom et post-nom
@@ -73,15 +73,18 @@ public class UtilisateurAdapter extends RecyclerView.Adapter<UtilisateurAdapter.
         vh.validerBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO mettre a jour le statu actif de l'utilisateur dans l'array list mUtilisateurList
+                //Ne fonctionne, mais ne fonctionne pas correctement a temps reel de facon visuel
                 if (utilisateur.actif) {
 
                     utilisateur.actif = false;
-//                    mUtilisateurList[1].act =
+                    mUtilisateurList.get(i).actif = false;
+                    notifyDataSetChanged();
                     persist(utilisateur);
                 } else {
                     utilisateur.actif = true;
                     persist(utilisateur);
+                    mUtilisateurList.get(i).actif = false;
+                    notifyDataSetChanged();
                 }
 
             }
@@ -120,22 +123,5 @@ public class UtilisateurAdapter extends RecyclerView.Adapter<UtilisateurAdapter.
         }).execute();
     }
 
-    //TODO FINISH IMPLEMENTING THIS WHEN ACTIVATING A USER
-    public void loadData(final Context context) {
-        (new AsyncTask<Void, Void, Void>(){
-            List<Province> provinces;
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                provinces = IrtDatabase.getInstance(context).getIProvinceDao().getAll();
-
-                return null;
-            }
-        }).execute();
-    }
 }

@@ -11,35 +11,11 @@
         app:actionViewClass="android.support.v7.widget.SearchView"/>
 
     <item
-        android:id="@+id/action_filter"
-        android:orderInCategory="2"
-        android:title="Filtrer"
-        android:icon="@drawable/ic_filter"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/action_affect_equipement"
-        android:orderInCategory="1"
-        android:title="Affecter equipements"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/action_list_tcv"
         android:orderInCategory="1"
         android:title="Liste TCV"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_populate_equipement"
-        android:orderInCategory="1"
-        android:title="Populer equipement"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/action_peek_db"
-        android:orderInCategory="1"
-        android:title="Chequer DB"
-        app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_view_affectation"

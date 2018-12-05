@@ -59,7 +59,7 @@ public class SynchronizationActivity extends AppCompatActivity {
         utilisateur1.codeTerritoireVille = "102";
         utilisateur1.codeSiteFormation = "10002";
         utilisateur1.codeBureauVote = "100002";
-        Utilisateur utilisateur2 = new Utilisateur("1008","Test 2", true, "1", "088888888");
+        Utilisateur utilisateur2 = new Utilisateur("1008","Test 2", true, "1", "09999999");
         utilisateur2.codeProvince = "11";
         utilisateur2.codeTerritoireVille = "102";
         utilisateur2.codeSiteFormation = "10002";

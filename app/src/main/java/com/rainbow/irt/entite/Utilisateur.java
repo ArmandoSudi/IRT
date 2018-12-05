@@ -19,29 +19,29 @@ public class Utilisateur {
 
     @PrimaryKey
     @ColumnInfo(name = "CODE_UTILISATEUR")
-    @SerializedName("CODE_UTILISATEUR")
+    @SerializedName("CodeUtilisateur")
     @NonNull
     public String codeUtilisateur;
     @ColumnInfo(name = "NOM")
-    @SerializedName("NOM")
+    @SerializedName("Nom")
     public String nom;
     @ColumnInfo(name = "POSTNOM")
-    @SerializedName("POSTNOM")
+    @SerializedName("Postnom")
     public String postnom;
     @ColumnInfo(name = "PRENOM")
-    @SerializedName("PRENOM")
+    @SerializedName("Prenom")
     public String prenom;
     @ColumnInfo(name = "PASSWORD")
-    @SerializedName("PASSWORD")
+    @SerializedName("Password")
     public String password;
     @ColumnInfo(name = "ACTIF")
-    @SerializedName("ACTIF")
+    @SerializedName("Actif")
     public boolean actif;
     @ColumnInfo(name = "CODE_PROFIL")
-    @SerializedName("CODE_PROFIL")
+    @SerializedName("CodeProfil")
     public String codeProfil;
     @ColumnInfo(name = "TELEPHONE")
-    @SerializedName("TELEPHONE")
+    @SerializedName("Telephone")
     public String telephone;
 
     @Ignore
