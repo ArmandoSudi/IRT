@@ -21,4 +21,9 @@ public class Profil {
     @ColumnInfo(name = "LIBELLE")
     @SerializedName("LIBELLE")
     public String libelle;
+
+    public Profil(@NonNull String codeProfil, String libelle) {
+        this.codeProfil = codeProfil;
+        this.libelle = libelle;
+    }
 }

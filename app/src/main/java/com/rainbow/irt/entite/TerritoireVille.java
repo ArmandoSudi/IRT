@@ -17,17 +17,29 @@ import com.google.gson.annotations.SerializedName;
 public class TerritoireVille {
     @PrimaryKey
     @ColumnInfo(name = "CODE_TERRITOIRE_VILLE")
-    @SerializedName("CODE_TERRITOIRE_VILLE")
+    @SerializedName("CodeTerritoireVille")
     @NonNull
     public String codeTerritoireVille;
     @ColumnInfo(name = "CODE_PROVINCE")
-    @SerializedName("CODE_PROVINCE")
+    @SerializedName("CodeProvince")
     public String codeProvince;
     @ColumnInfo(name = "LIBELLE")
-    @SerializedName("LIBELLE")
+    @SerializedName("Libelle")
     public String libelle;
     @ColumnInfo(name = "NIVEAU")
-    @SerializedName("NIVEAU")
+    @SerializedName("Niveau")
     public String niveau;
+
+    public TerritoireVille(@NonNull String codeTerritoireVille, String codeProvince, String libelle, String niveau) {
+        this.codeTerritoireVille = codeTerritoireVille;
+        this.codeProvince = codeProvince;
+        this.libelle = libelle;
+        this.niveau = niveau;
+    }
+
+    @Override
+    public String toString() {
+        return libelle;
+    }
 }
 

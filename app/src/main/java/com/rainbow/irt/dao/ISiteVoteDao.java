@@ -7,7 +7,10 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.rainbow.irt.entite.SiteFormation;
 import com.rainbow.irt.entite.SiteVote;
+
+import java.util.List;
 
 /**
  * Created by Sugar on 11/23/2018
@@ -26,4 +29,16 @@ public interface ISiteVoteDao {
 
     @Query("DELETE FROM SITE_VOTE")
     void deleteAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<SiteVote> siteVotes);
+
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    void insertAll
+
+    @Query("SELECT * FROM SITE_VOTE")
+    List<SiteVote> get();
+
+    @Query("SELECT * FROM SITE_VOTE WHERE CODE_SITE_FORMATION=:codeSiteFormation")
+    List<SiteVote> getSiteVoteBySiteFormation(String codeSiteFormation);
 }

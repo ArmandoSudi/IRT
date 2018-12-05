@@ -17,26 +17,32 @@ import com.google.gson.annotations.SerializedName;
 public class Equipement {
     @PrimaryKey
     @ColumnInfo(name = "CODE_EQUIPEMENT")
-    @SerializedName("CODE_EQUIPEMENT")
+    @SerializedName("CodeEquipement")
     @NonNull
     public String codeEquipement;
     @ColumnInfo(name = "NUMERO_SERIE")
-    @SerializedName("NUMERO_SERIE")
+    @SerializedName("NumeroSerie")
     public String numeroSerie;
     @ColumnInfo(name = "DESCRIPTION")
-    @SerializedName("DESCRIPTION")
+    @SerializedName("Description")
     public String description;
     @ColumnInfo(name = "TYPE_EQUIPEMENT")
-    @SerializedName("TYPE_EQUIPEMENT")
+    @SerializedName("TypeEquipement")
     public String typeEquipement;
     @ColumnInfo(name = "CODE_SITE_FORMATION")
-    @SerializedName("CODE_SITE_FORMATION")
+    @SerializedName("CodeSiteFormation")
     public String codeSiteFormation;
 
-    public Equipement(String numeroSerie, String description, String typeEquipement, String codeSiteFormation) {
+    public Equipement(String codeEquipement, String numeroSerie, String description, String typeEquipement, String codeSiteFormation) {
+        this.codeEquipement = codeEquipement;
         this.numeroSerie = numeroSerie;
         this.description = description;
         this.typeEquipement = typeEquipement;
         this.codeSiteFormation = codeSiteFormation;
+    }
+
+    @Override
+    public String toString() {
+        return numeroSerie;
     }
 }

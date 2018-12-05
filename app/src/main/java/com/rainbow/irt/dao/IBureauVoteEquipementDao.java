@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.BureauVoteEquipement;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
@@ -26,4 +28,10 @@ public interface IBureauVoteEquipementDao {
 
     @Query("DELETE FROM BUREAU_VOTE_EQUIPEMENT")
     void deleteAll();
+
+    @Query("SELECT * FROM BUREAU_VOTE_EQUIPEMENT")
+    List<BureauVoteEquipement> getAll();
+
+    @Query("SELECT * FROM BUREAU_VOTE_EQUIPEMENT WHERE CODE_EQUIPEMENT=:codeEquipement")
+    BureauVoteEquipement getByCodeEquipement(String codeEquipement);
 }

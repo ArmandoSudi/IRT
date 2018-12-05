@@ -17,20 +17,21 @@ import com.google.gson.annotations.SerializedName;
 public class BureauVote {
     @PrimaryKey
     @ColumnInfo(name = "CODE_BUREAU_VOTE")
-    @SerializedName("CODE_BUREAU_VOTE")
+    @SerializedName("CodeBureauVote")
     @NonNull
     public String codeBureauVote;
     @ColumnInfo(name = "LIBELLE")
-    @SerializedName("LIBELLE")
+    @SerializedName("Libelle")
     public String libelle;
     @ColumnInfo(name = "CODE_SITE_VOTE")
-    @SerializedName("CODE_SITE_VOTE")
+    @SerializedName("CodeSiteVote")
     public String codeSiteVote;
     @ColumnInfo(name = "CENTRE_VOTE")
-    @SerializedName("CENTRE_VOTE")
+    @SerializedName("CentreVote")
     public String centreVote;
 
-    public BureauVote(String libelle, String codeSiteVote, String centreVote) {
+    public BureauVote(String codeBureauVote, String libelle, String codeSiteVote, String centreVote) {
+        this.codeBureauVote = codeBureauVote;
         this.libelle = libelle;
         this.codeSiteVote = codeSiteVote;
         this.centreVote = centreVote;

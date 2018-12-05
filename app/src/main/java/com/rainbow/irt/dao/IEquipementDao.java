@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.Equipement;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
@@ -24,6 +26,15 @@ public interface IEquipementDao {
     @Delete
     void delete(Equipement...equipements);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long[] insertAll(List<Equipement> equipements);
+
     @Query("DELETE FROM EQUIPEMENT")
     void deleteAll();
+
+    @Query("SELECT * FROM EQUIPEMENT")
+    List<Equipement> getAll();
+
+    @Query("SELECT * FROM EQUIPEMENT WHERE CODE_EQUIPEMENT=:codeEquipement")
+    Equipement get(String codeEquipement);
 }

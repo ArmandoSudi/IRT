@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.Incident;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
@@ -26,4 +28,13 @@ public interface IIncidentDao {
 
     @Query("DELETE FROM INCIDENT")
     void deleteAll();
+
+    @Query("SELECT * FROM INCIDENT")
+    List<Incident> getAll();
+
+    @Query("SELECT * FROM INCIDENT WHERE CODE_INCIDENT=:codeIncident")
+    Incident getByCodeIncident(int codeIncident);
+
+    @Query("SELECT * FROM INCIDENT WHERE CODE_EQUIPEMENT=:codeEquipement")
+    List<Incident> getIncidentByEquipement(String codeEquipement);
 }

@@ -22,5 +22,19 @@
         <item>Lukunga</item>
         <item>Fizi</item>
     </string-array>
+    <string-array name="site_formations">
+        <item>College Alfajiri</item>
+        <item>St Leonard</item>
+        <item>Athenee d'Ibanda</item>
+        <item>Centre culturel</item>
+    </string-array>
+    <string-array name="type_equipements">
+        <item>TSV</item>
+        <item>BATTERIE</item>
+    </string-array>
+    <string-array name="profiles">
+        <item>L 1</item>
+        <item>TCV</item>
+    </string-array>
 
 </resources>

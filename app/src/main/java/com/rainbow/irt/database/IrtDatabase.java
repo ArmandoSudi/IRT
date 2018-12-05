@@ -5,6 +5,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -59,7 +60,7 @@ import com.rainbow.irt.utils.DateConverts;
         UtilisateurL1.class,
         UtilisateurL2L3.class,
         UtilisateurTCV.class,},
-        version = 1, exportSchema = false
+        version = 3, exportSchema = false
 
 )
 @TypeConverters(DateConverts.class)
@@ -75,6 +76,14 @@ public abstract class IrtDatabase extends RoomDatabase {
 
     public static IrtDatabase INSTANCE;
 
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE SITE_VOTE ADD COLUMN LIBELLE TEXT");
+        }
+    };
+
+
     public static IrtDatabase getInstance(final Context context) {
         if (INSTANCE == null) {
             synchronized (IrtDatabase.class) {
@@ -82,12 +91,14 @@ public abstract class IrtDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             IrtDatabase.class, DB_NAME)
                             .addCallback(sRoomDatabaseCallback)
+                            .addMigrations(MIGRATION_1_2)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
 
     public abstract IUtilisateurDao getIUtilisateurDao();
     public abstract IProfilDao getIProfileDao();

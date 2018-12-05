@@ -9,13 +9,15 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.Province;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
 @Dao
 public interface IProvinceDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insert(Province...provinces);
 
     @Update
@@ -26,4 +28,10 @@ public interface IProvinceDao {
 
     @Query("DELETE FROM PROVINCE")
     void deleteAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Province> provinces);
+
+    @Query("SELECT * FROM PROVINCE")
+    List<Province> getAll();
 }

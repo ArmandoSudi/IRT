@@ -14,10 +14,20 @@ import com.google.gson.annotations.SerializedName;
 public class LexiquePanne {
     @PrimaryKey
     @ColumnInfo(name = "CODE_LEXIQUE_PANNE")
-    @SerializedName("CODE_LEXIQUE_PANNE")
+    @SerializedName("CodeLexiquePanne")
     @NonNull
     public String codeLexiquePanne;
     @ColumnInfo(name = "LIBELLE")
-    @SerializedName("LIBELLE")
+    @SerializedName("Libelle")
     public String libelle;
+
+    public LexiquePanne(@NonNull String codeLexiquePanne, String libelle) {
+        this.codeLexiquePanne = codeLexiquePanne;
+        this.libelle = libelle;
+    }
+
+    @Override
+    public String toString() {
+        return libelle;
+    }
 }

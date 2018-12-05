@@ -17,16 +17,32 @@ import com.google.gson.annotations.SerializedName;
 public class SiteVote {
     @PrimaryKey
     @ColumnInfo(name = "CODE_SITE_VOTE")
-    @SerializedName("CODE_SITE_VOTE")
+    @SerializedName("CodeSiteVote")
     @NonNull
     public String codeSiteVote;
+    @ColumnInfo(name = "LIBELLE")
+    @SerializedName("Libelle")
+    public String libelle;
     @ColumnInfo(name = "LATITUDE")
-    @SerializedName("LATITUDE")
-    public double latitude;
+    @SerializedName("Latitude")
+    public Double latitude;
     @ColumnInfo(name = "LONGITUDE")
-    @SerializedName("LONGITUDE")
-    public double longitude;
+    @SerializedName("Longitude")
+    public Double longitude;
     @ColumnInfo(name = "CODE_SITE_FORMATION")
-    @SerializedName("CODE_SITE_FORMATION")
+    @SerializedName("CodeSiteFormation")
     public String codeSiteFormation;
+
+    public SiteVote(@NonNull String codeSiteVote, String libelle, Double latitude, Double longitude, String codeSiteFormation) {
+        this.codeSiteVote = codeSiteVote;
+        this.libelle = libelle;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.codeSiteFormation = codeSiteFormation;
+    }
+
+    @Override
+    public String toString() {
+        return this.libelle;
+    }
 }

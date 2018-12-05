@@ -30,4 +30,10 @@ public class BureauVoteEquipement {
     @ColumnInfo(name = "DATE_JOUR")
     @SerializedName("DATE_JOUR")
     public Date dateJour;
+
+    public BureauVoteEquipement(@NonNull String codeEquipement, @NonNull String codeBureauVote, Date dateJour) {
+        this.codeEquipement = codeEquipement;
+        this.codeBureauVote = codeBureauVote;
+        this.dateJour = dateJour;
+    }
 }

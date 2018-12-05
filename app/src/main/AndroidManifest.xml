@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rainbow.irt">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,17 +11,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.CheckingActivity" />
+        <activity
+            android:name=".activity.DetailsEquipementActivity"
+            android:label="Details equipement" />
+        <activity
+            android:name=".activity.LogIncidentActivity"
+            android:label="Enregistrer incident" />
+        <activity
+            android:name=".activity.AffecterEquipementActivity"
+            android:label="Affecter equipement" />
+        <activity
+            android:name=".activity.AddEquipementActivity"
+            android:label="Ajouter equipement" />
+        <activity
+            android:name=".activity.UtilisateurListActivity"
+            android:label="Liste des utilisateurs en attente" />
+        <activity android:name=".activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CheckingActivity" />
-        <activity android:name=".DetailsEquipementActivity" />
-        <activity android:name=".LogIncidentActivity" />
-        <activity android:name=".AffecterEquipementActivity"></activity>
+        <activity
+            android:name=".activity.RegisterUtilisateurActivity"
+            android:label="Enregistrer utilisateur" />
+        <activity
+            android:name=".activity.CheckApprobationActivity"
+            android:label="Verifier approbation" />
+        <activity
+            android:name=".activity.AffectationListActivity"
+            android:label="Fermer incident"/>
+        <activity android:name=".activity.FermerIncidentActivity" />
+        <activity android:name=".activity.SynchronizationActivity"></activity>
     </application>
 
 </manifest>

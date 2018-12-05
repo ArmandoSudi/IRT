@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.LexiquePanne;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/24/2018
  */
@@ -26,4 +28,10 @@ public interface ILexiquePanneDao {
 
     @Query("DELETE FROM LEXIQUE_PANNE")
     void deleteAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<LexiquePanne> lexiquePannes);
+
+    @Query("SELECT * FROM LEXIQUE_PANNE")
+    List<LexiquePanne> get();
 }

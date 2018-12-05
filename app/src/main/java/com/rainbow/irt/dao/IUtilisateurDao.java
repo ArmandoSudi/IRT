@@ -9,13 +9,15 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.Utilisateur;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
 @Dao
 public interface IUtilisateurDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insert(Utilisateur...utilisateurs);
 
     @Update
@@ -26,4 +28,16 @@ public interface IUtilisateurDao {
 
     @Query("DELETE FROM UTILISATEUR")
     void deleteAll();
+
+    @Query("SELECT * FROM UTILISATEUR")
+    List<Utilisateur> getAll();
+
+    @Query("SELECT * FROM UTILISATEUR WHERE CODE_PROFIL=:profileCode")
+    List<Utilisateur> getAllByProfileCode(String profileCode);
+
+    @Query("SELECT * FROM UTILISATEUR WHERE CODE_UTILISATEUR=:codeUtilisateur")
+    Utilisateur get(String codeUtilisateur);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Utilisateur> utilisateurs);
 }

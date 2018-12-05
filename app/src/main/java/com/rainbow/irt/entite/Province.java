@@ -14,10 +14,20 @@ import com.google.gson.annotations.SerializedName;
 public class Province {
     @PrimaryKey
     @ColumnInfo(name = "CODE_PROVINCE")
-    @SerializedName("CODE_PROVINCE")
+    @SerializedName("CodeProvince")
     @NonNull
     public String codeProvince;
     @ColumnInfo(name = "LIBELLE")
-    @SerializedName("LIBELLE")
+    @SerializedName("Libelle")
     public String libelle;
+
+    public Province(@NonNull String codeProvince, String libelle) {
+        this.codeProvince = codeProvince;
+        this.libelle = libelle;
+    }
+
+    @Override
+    public String toString() {
+        return libelle;
+    }
 }

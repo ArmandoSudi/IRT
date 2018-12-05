@@ -9,13 +9,15 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.Profil;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
 @Dao
 public interface IProfilDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insert(Profil...profils);
 
     @Update
@@ -26,4 +28,7 @@ public interface IProfilDao {
 
     @Query("DELETE FROM PROFIL")
     void deleteAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Profil> profils);
 }

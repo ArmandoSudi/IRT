@@ -3,6 +3,7 @@ package com.rainbow.irt.adapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -13,9 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rainbow.irt.R;
+import com.rainbow.irt.database.IrtDatabase;
 import com.rainbow.irt.entite.BureauVote;
+import com.rainbow.irt.entite.BureauVoteEquipement;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +30,8 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
 
     Activity mActivity;
     List<BureauVote> mBureauVoteList = new ArrayList<>();
+    String mCodeEquipement;
+    private Calendar mCalendar = Calendar.getInstance();
 
     static class VH extends RecyclerView.ViewHolder {
         TextView libelleTV, centreVoteTV;
@@ -35,10 +42,12 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
         }
     }
 
-    public BureauVoteAdapter(Activity activity, List<BureauVote> bureauVotes) {
+    public BureauVoteAdapter(Activity activity, List<BureauVote> bureauVotes, String codeEquipement) {
         this.mActivity = activity;
         this.mBureauVoteList = bureauVotes;
+        this.mCodeEquipement = codeEquipement;
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull VH vh, int i) {
@@ -56,7 +65,7 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
                         .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                affecterEquipement(mCodeEquipement, bureauVote.codeBureauVote);
                             }
                         })
                         .setNegativeButton("Non", null).show();
@@ -73,8 +82,39 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
         return new VH(view);
     }
 
+    public void affecterEquipement(String codeEquipement, String codeBureauVote) {
+        Date dateAffecation = mCalendar.getTime();
+        BureauVoteEquipement affectation = new BureauVoteEquipement(codeEquipement, codeBureauVote, dateAffecation);
+        saveAffecation(affectation);
+        mActivity.finish();
+    }
+
+    public void addAll(List<BureauVote> bureauVotes){
+        this.mBureauVoteList.addAll(bureauVotes);
+    }
+
+    public void clearAll() {
+        this.mBureauVoteList.clear();
+    }
+
     @Override
     public int getItemCount() {
         return mBureauVoteList.size();
+    }
+
+    public void saveAffecation(final BureauVoteEquipement bureauVoteEquipement) {
+        (new AsyncTask<BureauVoteEquipement, Void, Void>() {
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Toast.makeText(mActivity, "Equipement affecte", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected Void doInBackground(BureauVoteEquipement... bureauVoteEquipements) {
+                IrtDatabase.getInstance(mActivity).getIBureauVoteEquipementDao().insert(bureauVoteEquipements);
+                return null;
+            }
+        }).execute(bureauVoteEquipement);
     }
 }

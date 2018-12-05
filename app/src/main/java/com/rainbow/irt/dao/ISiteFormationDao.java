@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 
 import com.rainbow.irt.entite.SiteFormation;
 
+import java.util.List;
+
 /**
  * Created by Sugar on 11/23/2018
  */
@@ -26,4 +28,13 @@ public interface ISiteFormationDao {
 
     @Query("DELETE FROM SITE_FORMATION")
     void deleteAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<SiteFormation> siteFormations);
+
+    @Query("SELECT * FROM SITE_FORMATION")
+    List<SiteFormation> getAll();
+
+    @Query("SELECT * FROM SITE_FORMATION WHERE CODE_TERRITOIRE_VILLE=:codeTerritoireVille")
+    List<SiteFormation> getSiteFormationByTerritoireVille(String codeTerritoireVille);
 }
