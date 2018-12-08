@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
     <TextView
+        android:id="@+id/title_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
@@ -114,8 +115,7 @@
         <Spinner
             android:id="@+id/province_sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/provinces"></Spinner>
+            android:layout_height="wrap_content"></Spinner>
     </LinearLayout>
 
     <LinearLayout
@@ -134,8 +134,7 @@
         <Spinner
             android:id="@+id/ville_territoire_sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/villes"></Spinner>
+            android:layout_height="wrap_content"></Spinner>
     </LinearLayout>
 
     <LinearLayout
@@ -154,9 +153,48 @@
         <Spinner
             android:id="@+id/site_formation_sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/site_formations"></Spinner>
+            android:layout_height="wrap_content"></Spinner>
     </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/site_vote_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selectionner votre site de vote"/>
+            <Spinner
+                android:id="@+id/site_vote_sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></Spinner>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bureau_vote_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selectionner votre bureau de vote"/>
+            <Spinner
+                android:id="@+id/bureau_vote_sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></Spinner>
+        </LinearLayout>
 
     <Button
         android:id="@+id/login_bt"

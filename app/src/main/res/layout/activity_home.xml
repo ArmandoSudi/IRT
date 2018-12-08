@@ -56,6 +56,15 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:text="connecter"/>
 
+            <TextView
+                android:id="@+id/register_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorPrimary"
+                android:text="S'ENREGISTRER"/>
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

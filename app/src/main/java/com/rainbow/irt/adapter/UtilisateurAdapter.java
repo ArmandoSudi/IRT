@@ -1,11 +1,11 @@
 package com.rainbow.irt.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +14,27 @@ import android.widget.TextView;
 
 import com.rainbow.irt.R;
 import com.rainbow.irt.database.IrtDatabase;
-import com.rainbow.irt.entite.Province;
 import com.rainbow.irt.entite.Utilisateur;
+import com.rainbow.irt.service.MobileApi;
+import com.rainbow.irt.service.MobileApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Sugar on 11/27/2018
  */
 public class UtilisateurAdapter extends RecyclerView.Adapter<UtilisateurAdapter.VH> {
 
+    private static final String TAG = "UtilisateurAdapter";
+
     Activity mActivity;
     List<Utilisateur> mUtilisateurList;
+    MobileApiInterface mobileApiInterface = MobileApi.getService();
 
     static class VH extends RecyclerView.ViewHolder {
         TextView nomCompletTV, profilTV, telephoneTV;
@@ -59,34 +67,19 @@ public class UtilisateurAdapter extends RecyclerView.Adapter<UtilisateurAdapter.
     public void onBindViewHolder(@NonNull VH vh, final int i) {
         final Utilisateur utilisateur = mUtilisateurList.get(i);
 
-        //TODO Ajouter prenom et post-nom
-        vh.nomCompletTV.setText(utilisateur.nom );
+        vh.nomCompletTV.setText(utilisateur.nom + " " + utilisateur.postnom + " " + utilisateur.prenom );
         vh.profilTV.setText(utilisateur.codeProfil);
         vh.telephoneTV.setText(utilisateur.telephone + " ");
 
         if ( utilisateur.actif ) {
             vh.itemView.setBackgroundColor(Color.parseColor("#DCDCDC"));
-            vh.validerBT.setText("Invalider");
-            vh.validerBT.setBackgroundColor(mActivity.getResources().getColor(R.color.colorGrey));
+            vh.validerBT.setVisibility(View.GONE);
         }
 
         vh.validerBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Ne fonctionne, mais ne fonctionne pas correctement a temps reel de facon visuel
-                if (utilisateur.actif) {
-
-                    utilisateur.actif = false;
-                    mUtilisateurList.get(i).actif = false;
-                    notifyDataSetChanged();
-                    persist(utilisateur);
-                } else {
-                    utilisateur.actif = true;
-                    persist(utilisateur);
-                    mUtilisateurList.get(i).actif = false;
-                    notifyDataSetChanged();
-                }
-
+                validerUtilisateur(utilisateur);
             }
         });
 
@@ -101,27 +94,52 @@ public class UtilisateurAdapter extends RecyclerView.Adapter<UtilisateurAdapter.
         mUtilisateurList.addAll(utilisateurs);
     }
 
-    public void persist(final Utilisateur utilisateur) {
+    public void saveInDB(final Utilisateur utilisateur) {
         (new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                Log.e(TAG, "saveInDB: Utilisateur enregistre dans la base des donnees");
                 notifyDataSetChanged();
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
-                Utilisateur utilisateur1 = IrtDatabase.getInstance(mActivity).getIUtilisateurDao().get(utilisateur.codeUtilisateur);
-                if (utilisateur1.actif) {
-                    utilisateur1.actif = false;
-                } else {
-                    utilisateur1.actif = true;
-                }
-                IrtDatabase.getInstance(mActivity).getIUtilisateurDao().update(utilisateur1);
+                IrtDatabase.getInstance(mActivity).getIUtilisateurDao().insert(utilisateur);
                 return null;
             }
         }).execute();
     }
 
+    /**
+     * Quand on valide un utilisateur, on le cree en ligne, puis recupere sa cle nouvellement
+     * genere par le serveur pour le persister dans notre base des donees en local
+     * @param utilisateur
+     */
+    public void validerUtilisateur(final Utilisateur utilisateur){
+        if (utilisateur != null) {
+            mobileApiInterface.postUtilisateur(utilisateur).enqueue(new Callback<Utilisateur>() {
+                @Override
+                public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                    if (response.isSuccessful()){
+                        if (response.body() != null) {
+                            Log.e(TAG, "validerUtilisateur: codeUtilisateur: "
+                                    + utilisateur.codeUtilisateur + " isActif: " + utilisateur.actif);
+                            saveInDB(utilisateur);
+                        } else {
+                            Log.e(TAG, "validerUtilisateur: Response body is null");
+                        }
+                    } else {
+                        Log.e(TAG, "validerUtilisateur: Response body is not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Utilisateur> call, Throwable t) {
+                    Log.e(TAG, "postUtilisateur() Failed");
+                }
+            });
+        }
+    }
 
 }

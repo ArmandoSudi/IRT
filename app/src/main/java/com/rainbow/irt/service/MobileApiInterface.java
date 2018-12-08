@@ -50,6 +50,9 @@ public interface MobileApiInterface {
     @GET("profile/")
     public Call<List<Profil>> getProfilList();
 
+    @GET("utilisateur/{codeUtilisateur}/")
+    public Call<Utilisateur> getUtilisateur(String codeUtilisateur);
+
     @Headers({"Content-Type: application/json"})
     @POST("saveincidents/")
     public Call<String> postIncidentList(@Body List<Incident> incidents);

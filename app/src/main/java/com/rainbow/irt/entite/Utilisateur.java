@@ -57,6 +57,10 @@ public class Utilisateur {
     public String codeSiteFormation;
 
     @Ignore
+    @SerializedName("CodeSiteVote")
+    public String codeSiteVote;
+
+    @Ignore
     @SerializedName("CodeBureauVote")
     public String codeBureauVote;
 

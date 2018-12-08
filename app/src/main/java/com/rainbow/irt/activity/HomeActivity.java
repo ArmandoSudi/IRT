@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rainbow.irt.R;
@@ -23,6 +24,7 @@ import com.rainbow.irt.entite.Province;
 import com.rainbow.irt.entite.SiteFormation;
 import com.rainbow.irt.entite.SiteVote;
 import com.rainbow.irt.entite.TerritoireVille;
+import com.rainbow.irt.entite.Utilisateur;
 import com.rainbow.irt.service.MobileApi;
 import com.rainbow.irt.service.MobileApiInterface;
 import com.rainbow.irt.utils.Constant;
@@ -38,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
 
     EditText mUserNameET, mPasswordET;
+    TextView mRegisterTV;
     Button mLoginBT;
 
     MobileApiInterface mobileApiInterface = MobileApi.getService();
@@ -52,6 +55,10 @@ public class HomeActivity extends AppCompatActivity {
     List<Profil> mProfils = new ArrayList<>();
 
     SharedPreferences mSharedPref;
+    SharedPreferences.Editor mEditor;
+
+    boolean isActif = false;
+    String mCodeUtilisateur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,10 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPref.edit();
+
+        isActif = mSharedPref.getBoolean(Constant.KEY_IS_ACTIVE, false);
+        mCodeUtilisateur = mSharedPref.getString(Constant.KEY_CODE_UTILISATEUR, null);
 
         initScreen();
     }
@@ -67,24 +78,22 @@ public class HomeActivity extends AppCompatActivity {
         mUserNameET = findViewById(R.id.username_et);
         mPasswordET = findViewById(R.id.password_et);
         mLoginBT = findViewById(R.id.login_bt);
+        mRegisterTV = findViewById(R.id.register_tv);
 
         mLoginBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
-//                loginStub();
             }
         });
-    }
 
-    public void testApi() {
-        Log.e(TAG, "Starting testing testApi");
-        getLexiquePanne();
-    }
-
-    public void loginStub(){
-        Intent intent = new Intent(HomeActivity.this, RegisterUtilisateurActivity.class);
-        startActivity(intent);
+        mRegisterTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, UtilisateurListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void login(){
@@ -95,17 +104,12 @@ public class HomeActivity extends AppCompatActivity {
             getDefaultData();
         } else {
             if (isAuthenticated(username, password)) {
-
-                //TODO  Remove when checking if is active method is implemented properly
-                Intent intent = new Intent(HomeActivity.this, CheckingActivity.class);
-                startActivity(intent);
-
                 if (isActive()) {
-                    intent = new Intent(HomeActivity.this, CheckingActivity.class);
+                    Intent intent = new Intent(HomeActivity.this, CheckingActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "Utilisateur n'est pas encore actif", Toast.LENGTH_SHORT).show();
-                    //TODO Implement method for checking if the user is active online and storing his status locally
+                    Toast.makeText(this, "Verification en ligne", Toast.LENGTH_SHORT).show();
+                    checkIfUserIsActive(mCodeUtilisateur);
                 }
             } else {
                 Toast.makeText(this, "Nom d'utilisateur ou mot de passe incorrect", Toast.LENGTH_SHORT).show();
@@ -368,5 +372,41 @@ public class HomeActivity extends AppCompatActivity {
 
     public boolean isActive() {
         return mSharedPref.getBoolean(Constant.KEY_IS_ACTIVE, false);
+    }
+
+    public void checkIfUserIsActive(String codeUtilisateur) {
+
+        if (!isActif && codeUtilisateur != null) {
+            mobileApiInterface.getUtilisateur(codeUtilisateur).enqueue(new Callback<Utilisateur>() {
+                @Override
+                public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                    if (response.isSuccessful()){
+                        if (response.body() != null){
+                            Utilisateur utilisateur = response.body();
+                            if (utilisateur.actif){
+                                isActif = true;
+                                mEditor.putBoolean(Constant.KEY_IS_ACTIVE, true);
+                                mEditor.commit();
+                                Toast.makeText(HomeActivity.this, "L'utilisateur est actif", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(HomeActivity.this, "L'utilisateur n'est pas actif", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.e(TAG, "checkIfUserIsActive Response Body is null" );
+                        }
+                    } else {
+                        Log.e(TAG, "checkIfUserIsActive Response Body is not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Utilisateur> call, Throwable t) {
+                    Log.e(TAG, "checkIfUserIsActive FAILED: " + t.getMessage());
+                }
+            });
+        } else {
+
+        }
+
     }
 }

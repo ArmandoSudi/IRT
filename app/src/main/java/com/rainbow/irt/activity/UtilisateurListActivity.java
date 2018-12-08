@@ -2,6 +2,7 @@ package com.rainbow.irt.activity;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +15,9 @@ import android.view.MenuItem;
 import com.rainbow.irt.R;
 import com.rainbow.irt.adapter.UtilisateurAdapter;
 import com.rainbow.irt.database.IrtDatabase;
-import com.rainbow.irt.entite.Profil;
 import com.rainbow.irt.entite.Utilisateur;
+import com.rainbow.irt.utils.Constant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UtilisateurListActivity extends AppCompatActivity {
@@ -40,7 +40,7 @@ public class UtilisateurListActivity extends AppCompatActivity {
 
         mUtilisateurRV.setAdapter(mUtilisateurAdapter);
 
-        new GetUtilisateurs(this, mUtilisateurAdapter).execute();
+        new GetUtilisateursTCV(this, mUtilisateurAdapter).execute();
     }
 
     @Override
@@ -52,65 +52,21 @@ public class UtilisateurListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_populer_utilisateurs) {
-            new PopulateDBAsyncTask(this).execute();
+        if (id == R.id.action_ajouter_tcv) {
+            Intent intent = new Intent(UtilisateurListActivity.this, RegisterUtilisateurActivity.class);
+            intent.putExtra(Constant.KEY_AJOUTER_TCV, Constant.AJOUTER_TCV);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public List<Utilisateur> populateUtilisateur() {
-        List<Utilisateur> utilisateurs = new ArrayList<>();
 
-        utilisateurs.add(new Utilisateur("10001","John Doe", true, "PRO1004", "088888888"));
-        utilisateurs.add(new Utilisateur("10002","Alain K.", true, "PRO1001", "088888888"));
-        utilisateurs.add(new Utilisateur("1003","David Muhunga", false, "PRO1003", "088888888"));
-        utilisateurs.add(new Utilisateur("1004","Armando Sudi", false, "PRO1002", "088888888"));
-        utilisateurs.add(new Utilisateur("1005","Julie Kabenga", true, "PRO1004", "088888888"));
-        utilisateurs.add(new Utilisateur("1006","Winny B.", false, "PRO1004", "088888888"));
-        utilisateurs.add(new Utilisateur("1007","Bienvenu Bagunda", true, "PRO1001", "088888888"));
-
-        return utilisateurs;
-    }
-
-    public List<Profil> populateProfil() {
-        List<Profil> profils = new ArrayList<>();
-
-        profils.add(new Profil("PRO1001", "L3"));
-        profils.add(new Profil("PRO1002", "L2"));
-        profils.add(new Profil("PRO1003", "L1"));
-        profils.add(new Profil("PRO1004", "TCV"));
-        return profils;
-    }
-
-    class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void> {
-
+    class GetUtilisateursTCV extends AsyncTask<Void, Void, List<Utilisateur>>{
         Context mContext;
-        private static final String TAG = "PopulateDBAsyncTask";
-
-        public PopulateDBAsyncTask(Context mContext) {
-            this.mContext = mContext;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            IrtDatabase.getInstance(mContext).getIProfileDao().insertAll(populateProfil());
-            IrtDatabase.getInstance(mContext).getIUtilisateurDao().insertAll(populateUtilisateur());
-            return null;
-        }
-    }
-
-    class GetUtilisateurs extends AsyncTask<Void, Void, List<Utilisateur>>{
-        Context mContext;
-        private static final String TAG = "GetUtilisateurs";
+        private static final String TAG = "GetUtilisateursTCV";
         UtilisateurAdapter utilisateurAdapter;
 
-        public GetUtilisateurs(Context mContext, UtilisateurAdapter utilisateurAdapter) {
+        public GetUtilisateursTCV(Context mContext, UtilisateurAdapter utilisateurAdapter) {
             this.mContext = mContext;
             this.utilisateurAdapter = utilisateurAdapter;
         }
@@ -125,7 +81,7 @@ public class UtilisateurListActivity extends AppCompatActivity {
 
         @Override
         protected List<Utilisateur> doInBackground(Void... voids) {
-            return IrtDatabase.getInstance(mContext).getIUtilisateurDao().getAll();
+            return IrtDatabase.getInstance(mContext).getIUtilisateurDao().getAllByProfileCode(Constant.PROFILE_CODE_TCV);
         }
     }
 }
