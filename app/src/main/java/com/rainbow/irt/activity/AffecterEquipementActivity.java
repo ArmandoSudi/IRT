@@ -35,6 +35,7 @@ public class AffecterEquipementActivity extends AppCompatActivity {
     Spinner mSiteVoteSP;
     String mCodeEquipement;
     SharedPreferences mSharedPref;
+    boolean mIsAffected;
 
 
     @Override
@@ -48,7 +49,7 @@ public class AffecterEquipementActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mCodeEquipement = intent.getStringExtra(Constant.KEY_CODE_EQUIPEMENT);
-
+        mIsAffected = intent.getBooleanExtra(Constant.KEY_IS_AFFECTED, false);
 
         initScreen(mCodeEquipement);
     }
@@ -71,7 +72,7 @@ public class AffecterEquipementActivity extends AppCompatActivity {
     }
 
     public void initScreen(String codeEquipement) {
-        mBureauVoteAdapter = new BureauVoteAdapter(this, new ArrayList<BureauVote>(), codeEquipement);
+        mBureauVoteAdapter = new BureauVoteAdapter(this, new ArrayList<BureauVote>(), codeEquipement, mIsAffected);
         mBureauVoteRV = findViewById(R.id.bureau_vote_rv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mBureauVoteRV.setLayoutManager(linearLayoutManager);

@@ -1,6 +1,5 @@
 package com.rainbow.irt.activity;
 
-import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,25 +50,8 @@ public class SynchronizationActivity extends AppCompatActivity {
     }
 
     public void synchroniser(){
-//        getIncidents();
-//        getUtilisateursTCV();
+        getIncidents();
 
-        Utilisateur utilisateur1 = new Utilisateur("1007","Test 1", true, "1", "088888888");
-        utilisateur1.codeProvince = "11";
-        utilisateur1.codeTerritoireVille = "102";
-        utilisateur1.codeSiteFormation = "10002";
-        utilisateur1.codeBureauVote = "100002";
-        Utilisateur utilisateur2 = new Utilisateur("1008","Test 2", true, "1", "09999999");
-        utilisateur2.codeProvince = "11";
-        utilisateur2.codeTerritoireVille = "102";
-        utilisateur2.codeSiteFormation = "10002";
-        utilisateur2.codeBureauVote = "100002";
-
-        List<Utilisateur> testUtilisateurs = new ArrayList<>();
-        testUtilisateurs.add(utilisateur1);
-        testUtilisateurs.add(utilisateur2);
-
-        postUtilisateurs(testUtilisateurs);
     }
 
     public void postIncidents(List<Incident> incidents) {
@@ -78,9 +60,12 @@ public class SynchronizationActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     if (response.isSuccessful()){
-                        Log.e(TAG, "onResponse: " + response.body() );
+                        if (response.body() != null){
+//                            Toast.makeText(SynchronizationActivity.this, "Données synchronisées", Toast.LENGTH_SHORT).show();
+                            String message = response.body();
+                            Log.e(TAG, "onResponse: Message: " + message );
+                        }
                     } else {
-                        Log.e(TAG, "onResponse: postIncidents body not successful : " + response.message());
                         Log.e(TAG, "onResponse: " + response.message() );
                     }
                 }
@@ -88,35 +73,12 @@ public class SynchronizationActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
                     Log.e(TAG, "onFailure: postIncidents a echoue : " + t.getMessage());
-                    Log.e(TAG, "onFailure: postIncidents a echoue : " + t.toString());
+                    Toast.makeText(SynchronizationActivity.this,
+                            "Echec de synchronization, vérifier la connexion et réesayer", Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
-
-    public void postUtilisateurs(List<Utilisateur> utilisateurs) {
-
-        if (utilisateurs.size() > 0) {
-            mobileApiInterface.postUtilisateurs(utilisateurs).enqueue(new Callback<List<Utilisateur>>() {
-                @Override
-                public void onResponse(Call<List<Utilisateur>> call, Response<List<Utilisateur>> response) {
-                    if (response.isSuccessful()) {
-                        List<Utilisateur> utilisateurs = response.body();
-                        Log.e(TAG, "onResponse: " + response.message());
-                        Log.e(TAG, "onResponse: Utilisateurs list size: " + utilisateurs.size() );
-                    } else {
-                        Log.e(TAG, "onResponse: " + response.message() );
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Utilisateur>> call, Throwable t) {
-                    Log.e(TAG, "onFailure: " + t.getMessage());
-                }
-            });
-        }
-    }
-
 
     public void getIncidents(){
         (new AsyncTask<Void, Void, List<Incident>>(){
@@ -126,6 +88,9 @@ public class SynchronizationActivity extends AppCompatActivity {
 
                 if (incidents != null && incidents.size() > 0) {
                     postIncidents(incidents);
+                    for (Incident incident : incidents) {
+                        Log.e(TAG, "onPostExecute: INCIDENTS: " + incident);
+                    }
                 }
             }
 
@@ -136,23 +101,5 @@ public class SynchronizationActivity extends AppCompatActivity {
         }).execute();
     }
 
-    public void getUtilisateursTCV(){
-        (new AsyncTask<Void, Void, List<Utilisateur>>(){
-            @Override
-            protected void onPostExecute(List<Utilisateur> utilisateurs) {
-                super.onPostExecute(utilisateurs);
 
-                Log.e(TAG, "onPostExecute: size: " + utilisateurs.size() );
-
-                if (utilisateurs != null && utilisateurs.size() > 0) {
-                    postUtilisateurs(utilisateurs);
-                }
-            }
-
-            @Override
-            protected List<Utilisateur> doInBackground(Void... voids) {
-                return IrtDatabase.getInstance(SynchronizationActivity.this).getIUtilisateurDao().getAllByProfileCode("1");
-            }
-        }).execute();
-    }
 }

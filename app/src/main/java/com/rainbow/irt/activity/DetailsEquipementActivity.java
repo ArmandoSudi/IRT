@@ -42,7 +42,7 @@ public class DetailsEquipementActivity extends AppCompatActivity {
     IncidentAdapter mIncidentAdapter;
 
     String mCodeEquipement;
-    boolean isAffected = false;
+    boolean mIsAffected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class DetailsEquipementActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mCodeEquipement = intent.getStringExtra(Constant.KEY_CODE_EQUIPEMENT);
-        isAffected = intent.getBooleanExtra(Constant.KEY_IS_AFFECTED, false);
+        mIsAffected = intent.getBooleanExtra(Constant.KEY_IS_AFFECTED, false);
 
         if (mCodeEquipement != null) {
             loadEquipement(mCodeEquipement);
@@ -86,9 +86,9 @@ public class DetailsEquipementActivity extends AppCompatActivity {
     }
 
     public void logIncident(View v) {
-        Toast.makeText(this, "Enregistrer incident", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LogIncidentActivity.class);
         intent.putExtra(Constant.KEY_CODE_EQUIPEMENT, mCodeEquipement);
+        intent.putExtra(Constant.KEY_IS_AFFECTED, mIsAffected);
         startActivity(intent);
     }
 
@@ -96,6 +96,7 @@ public class DetailsEquipementActivity extends AppCompatActivity {
         Toast.makeText(this, "Affecter equipement", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, AffecterEquipementActivity.class);
         intent.putExtra(Constant.KEY_CODE_EQUIPEMENT, mCodeEquipement);
+        intent.putExtra(Constant.KEY_IS_AFFECTED, mIsAffected);
         startActivity(intent);
     }
 
@@ -119,7 +120,7 @@ public class DetailsEquipementActivity extends AppCompatActivity {
 
     public void loadIncident(final String codeEquipement) {
 
-        mIncidentAdapter = new IncidentAdapter(this, new ArrayList<Incident>());
+        mIncidentAdapter = new IncidentAdapter(this, new ArrayList<Incident>(), codeEquipement, mIsAffected);
 
         (new AsyncTask<String, Void, Void>() {
             @Override

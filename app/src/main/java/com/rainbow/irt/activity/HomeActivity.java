@@ -90,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
         mRegisterTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, UtilisateurListActivity.class);
+                Intent intent = new Intent(HomeActivity.this, RegisterUtilisateurActivity.class);
                 startActivity(intent);
             }
         });
@@ -104,13 +104,9 @@ public class HomeActivity extends AppCompatActivity {
             getDefaultData();
         } else {
             if (isAuthenticated(username, password)) {
-                if (isActive()) {
-                    Intent intent = new Intent(HomeActivity.this, CheckingActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "Verification en ligne", Toast.LENGTH_SHORT).show();
-                    checkIfUserIsActive(mCodeUtilisateur);
-                }
+                //On ne verifie pas en ligne si l'utilisateur est actif
+                Intent intent = new Intent(HomeActivity.this, CheckingActivity.class);
+                startActivity(intent);
             } else {
                 Toast.makeText(this, "Nom d'utilisateur ou mot de passe incorrect", Toast.LENGTH_SHORT).show();
             }
@@ -126,9 +122,6 @@ public class HomeActivity extends AppCompatActivity {
         getEquipement();
         getLexiquePanne();
         getProfil();
-
-        Intent intent = new Intent(this, RegisterUtilisateurActivity.class);
-        startActivity(intent);
     }
 
     public void canInsert(){
@@ -158,6 +151,10 @@ public class HomeActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Toast.makeText(mContext, "Base des donnees initialisees", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(HomeActivity.this, RegisterUtilisateurActivity.class);
+            startActivity(intent);
+
         }
 
         @Override
@@ -195,7 +192,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Province>> call, Throwable t) {
-                Log.d(TAG, "onFailure: getProvince Failed");
+                Log.d(TAG, "getProvince Failed: " + t.getMessage());
             }
         });
     }
@@ -220,7 +217,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<TerritoireVille>> call, Throwable t) {
-                Log.d(TAG, "onFailure: getTerritoire Failed");
+                Log.d(TAG, "getTerritoire Failed: " + t.getMessage());
             }
         });
     }
@@ -245,7 +242,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<SiteFormation>> call, Throwable t) {
-                Log.e(TAG, "onFailure: getSiteFormation Failed");
+                Log.e(TAG, "getSiteFormation Failed: " + t.getMessage());
             }
         });
     }
@@ -260,6 +257,9 @@ public class HomeActivity extends AppCompatActivity {
                         mSiteVotes.addAll(siteVotes);
                         canInsert();
                         Log.e(TAG, "onResponse: SiteVote liste : " + mSiteVotes.size() );
+                        for (SiteVote site : siteVotes) {
+                            Log.e(TAG, "SiteVote code: " + site.codeSiteVote );
+                        }
                     } else {
                         Log.d(TAG, "onResponse: SiteVote body is NULL");
                     }
@@ -270,7 +270,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<SiteVote>> call, Throwable t) {
-                Log.e(TAG, "onFailure: getSiteVote FAILED");
+                Log.e(TAG, "getSiteVote FAILED: " + t.getMessage());
             }
         });
     }
@@ -285,6 +285,9 @@ public class HomeActivity extends AppCompatActivity {
                         mBureauVotes.addAll(bureauVotes);
                         canInsert();
                         Log.e(TAG, "onResponse: BureauVote Liste :" + mBureauVotes.size());
+                        for (BureauVote bureauVote : bureauVotes) {
+                            Log.e(TAG, "BureauVote code: " + bureauVote.codeBureauVote );
+                        }
                     } else {
                         Log.d(TAG, "onResponse: BureauVote body is NULL");
                     }
@@ -295,7 +298,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<BureauVote>> call, Throwable t) {
-                Log.e(TAG, "onFailure: getBureauVote FAILED");
+                Log.e(TAG, "getBureauVote FAILED: " + t.getMessage());
             }
         });
     }
@@ -320,7 +323,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Equipement>> call, Throwable t) {
-                Log.e(TAG, "onFailure: getEquipement FAILED");
+                Log.e(TAG, "getEquipement FAILED: " + t.getMessage());
             }
         });
     }
@@ -345,7 +348,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<LexiquePanne>> call, Throwable t) {
-                Log.d(TAG, "onFailure: getLexiquePanne FAILED");
+                Log.d(TAG, "getLexiquePanne FAILED: " + t.getMessage());
             }
         });
     }
@@ -366,6 +369,8 @@ public class HomeActivity extends AppCompatActivity {
         if (username.equals(storedUsername) && password.equals(storedPassword)){
             return true;
         } else {
+            Log.e(TAG, "isAuthenticated: EXPECTED : " + storedUsername + " " + storedPassword);
+            Log.e(TAG, "isAuthenticated: FOUND : " + username + " " + password);
             return false;
         }
     }

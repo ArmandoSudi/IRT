@@ -2,7 +2,9 @@ package com.rainbow.irt.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,15 +39,22 @@ public class LogIncidentActivity extends AppCompatActivity {
     TextView mDateTV;
     ImageView mCalendarIV;
     Date mDateIncident;
-    Button mSaveIncidentBT;
+    Button mSaveIncidentBT, mCancelBT;
     private Calendar mCalendar = Calendar.getInstance();
 
-    String mCodeEquipement, mCodeLexiquePanne;
+    String mCodeEquipement, mCodeLexiquePanne, mCodeUtilisateur;
+    SharedPreferences mSharedPref;
+
+    boolean isAffected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_incident);
+
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mCodeUtilisateur = mSharedPref.getString(Constant.KEY_CODE_UTILISATEUR, null);
+        isAffected = mSharedPref.getBoolean(Constant.KEY_IS_AFFECTED, false);
 
         Intent intent = getIntent();
         mCodeEquipement = intent.getStringExtra(Constant.KEY_CODE_EQUIPEMENT);
@@ -70,6 +79,7 @@ public class LogIncidentActivity extends AppCompatActivity {
         mDateTV = findViewById(R.id.date_tv);
         mCalendarIV = findViewById(R.id.calendar_iv);
         mSaveIncidentBT = findViewById(R.id.save_incident_bt);
+        mCancelBT = findViewById(R.id.cancel_bt);
 
         updateLabel();
 
@@ -77,6 +87,13 @@ public class LogIncidentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveIncident();
+            }
+        });
+
+        mCancelBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogIncidentActivity.this.finish();
             }
         });
 
@@ -99,22 +116,6 @@ public class LogIncidentActivity extends AppCompatActivity {
         mDateIncident = mCalendar.getTime();
     }
 
-    public void populatePanne() {
-        (new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... voids) {
-                List<LexiquePanne> lexiquePannes = new ArrayList<>();
-                lexiquePannes.add(new LexiquePanne("LEX100", "Panne A"));
-                lexiquePannes.add(new LexiquePanne("LEX101", "Panne B"));
-                lexiquePannes.add(new LexiquePanne("LEX102", "Panne C"));
-                lexiquePannes.add(new LexiquePanne("LEX103", "Panne D"));
-
-                IrtDatabase.getInstance(LogIncidentActivity.this).getILexiquePanneDao().insertAll(lexiquePannes);
-
-                return null;
-            }
-        }).execute();
-    }
 
     public void showPanne() {
         (new AsyncTask<Void, Void, List<LexiquePanne>>() {
@@ -153,15 +154,18 @@ public class LogIncidentActivity extends AppCompatActivity {
 
     public void saveIncident() {
 
-        Incident incident = new Incident(mCodeEquipement, "10001", mDateIncident, mCodeLexiquePanne, mDateIncident, mDateIncident, "Non Resolu" );
+        Incident incident = new Incident(mCodeEquipement, mCodeUtilisateur, mDateIncident, mCodeLexiquePanne, mDateIncident, mDateIncident, "Non Resolu" );
 
         (new AsyncTask<Incident, Void, Void>(){
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
-                LogIncidentActivity.this.finish();
-                Toast.makeText(LogIncidentActivity.this, "Incident saved successfully", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "saveIncident: INCIDENT ENREGISTRE AVEC SUCCES");
+                Intent intent = new Intent(LogIncidentActivity.this, DetailsEquipementActivity.class);
+                intent.putExtra(Constant.KEY_CODE_EQUIPEMENT, mCodeEquipement);
+                intent.putExtra(Constant.KEY_IS_AFFECTED, isAffected);
+                LogIncidentActivity.this.startActivity(intent);
             }
 
             @Override

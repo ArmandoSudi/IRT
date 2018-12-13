@@ -27,6 +27,8 @@ public class IncidentAdapter extends RecyclerView.Adapter<IncidentAdapter.VH> {
 
     Activity mActivity;
     List<Incident> mIncidentList = new ArrayList<>();
+    String mCodeEquipement;
+    boolean mIsAffected;
 
     static class VH extends RecyclerView.ViewHolder {
         TextView dateOuvertureTV, dateFermetureTV, panneTV, statuIncidentTV;
@@ -39,9 +41,11 @@ public class IncidentAdapter extends RecyclerView.Adapter<IncidentAdapter.VH> {
         }
     }
 
-    public IncidentAdapter(Activity activity, List<Incident> incidents) {
+    public IncidentAdapter(Activity activity, List<Incident> incidents, String codeEquipement, boolean isAffected) {
         this.mActivity = activity;
         this.mIncidentList = incidents;
+        this.mCodeEquipement = codeEquipement;
+        this.mIsAffected = isAffected;
     }
 
     @Override
@@ -69,9 +73,10 @@ public class IncidentAdapter extends RecyclerView.Adapter<IncidentAdapter.VH> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mActivity, "Aller fermer incident", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mActivity, FermerIncidentActivity.class);
                 intent.putExtra(Constant.KEY_CODE_INCIDENT, incident.codeIncident );
+                intent.putExtra(Constant.KEY_CODE_EQUIPEMENT, mCodeEquipement);
+                intent.putExtra(Constant.KEY_IS_AFFECTED, mIsAffected);
                 mActivity.startActivity(intent);
             }
         });

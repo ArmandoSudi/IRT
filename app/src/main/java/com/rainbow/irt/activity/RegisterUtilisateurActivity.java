@@ -8,6 +8,8 @@ import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,6 +33,7 @@ import com.rainbow.irt.service.MobileApi;
 import com.rainbow.irt.service.MobileApiInterface;
 import com.rainbow.irt.utils.Constant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.internal.Util;
@@ -107,6 +110,8 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
             mSiteVoteLL.setVisibility(View.GONE);
         } else {
             mTitleTV.setText("Enregistrer un technicien TCV");
+            mPasswordOneET.setVisibility(View.GONE);
+            mPasswordTwoET.setVisibility(View.GONE);
         }
 
         mLoginBT.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +122,22 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.register_user_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_synchroniser) {
+            Intent intent = new Intent(this, SynchronizationActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void register(int codeAction){
         String nom = mNomET.getText().toString();
         String prenom = mPrenomET.getText().toString();
@@ -125,7 +146,7 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
         String passwordOne = mPasswordOneET.getText().toString();
         String passwordTwo = mPasswordTwoET.getText().toString();
 
-        Utilisateur utilisateur = new Utilisateur("100", nom, postnom, prenom, passwordOne, true, "1",telephone );
+        Utilisateur utilisateur = new Utilisateur("544", nom, postnom, prenom, passwordOne, true, "1",telephone );
         utilisateur.codeProvince = mProvince.codeProvince;
         utilisateur.codeTerritoireVille = mTerritoireVille.codeTerritoireVille;
         utilisateur.codeSiteFormation = mSiteFormation.codeSiteFormation;
@@ -145,6 +166,7 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
             utilisateur.codeSiteVote = mCodeSiteVote;
             utilisateur.codeBureauVote = mCodeBureauVote;
             utilisateur.codeProfil = "1";
+            utilisateur.password = null;
         }
 
         postUser(utilisateur);
@@ -153,38 +175,103 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
 
     public void postUser(final Utilisateur utilisateur){
 
-        mobileApiInterface.postUtilisateur(utilisateur).enqueue(new Callback<Utilisateur>() {
+        List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>(){};
+        utilisateurs.add(utilisateur);
+
+        if (mCodeAction == 0 ) {
+            postUtilisateurL1(utilisateurs);
+        } else if (mCodeAction == Constant.AJOUTER_TCV) {
+            postUtilisateurTCV(utilisateurs);
+        }
+
+    }
+
+    /**
+     * Poste L'utilisateur(L1) en ligne, et si l'utilisateur est enregistre en ligne avec succes, nous
+     * retourne l'utilisateur qu'on enregistre dans la base des donnees.
+     * Son mot de passe et son nom d'utilisateur sont enregistres dans les preferences et seront utilises
+     * pour le login
+     * @param utilisateurs
+     */
+    public void postUtilisateurL1(List<Utilisateur> utilisateurs){
+        mobileApiInterface.postUtilisateurL1(utilisateurs).enqueue(new Callback<List<Utilisateur>>() {
             @Override
-            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+            public void onResponse(Call<List<Utilisateur>> call, Response<List<Utilisateur>> response) {
+
+                List<Utilisateur> utilisateurs1 = new ArrayList<>();
                 if (response.isSuccessful()) {
-                    Log.e(TAG, "onResponse: Response is successful");
                     if(response.body() != null) {
-                        Log.e(TAG, "onResponse: Response body is not null");
-                        Utilisateur utilisateur1 = response.body();
+                        utilisateurs1 = response.body();
 
-                        saveInDB(utilisateur1);
+                        saveInDB(utilisateurs1.get(0));
 
-                        if (mCodeAction == 0 ) {
-                            // Creation L1 avec succes
-                            saveInPref(utilisateur1);
-                            Toast.makeText(RegisterUtilisateurActivity.this, "L1 cree", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterUtilisateurActivity.this, CheckingActivity.class);
-                            RegisterUtilisateurActivity.this.startActivity(intent);
-                        } else {
-                            // Creation TCV avec succes
-                            Toast.makeText(RegisterUtilisateurActivity.this, "TCV cree", Toast.LENGTH_SHORT).show();
-                            RegisterUtilisateurActivity.this.finish();
-                        }
+                        // Creation L1 avec succes
+                        saveInPref(utilisateurs1.get(0));
+                        Log.e(TAG, "onResponse: L1 avec code: " + utilisateurs1.get(0).codeUtilisateur);
+                        Toast.makeText(RegisterUtilisateurActivity.this,
+                                "Utilisateur L1 enregistré", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RegisterUtilisateurActivity.this, CheckingActivity.class);
+                        RegisterUtilisateurActivity.this.startActivity(intent);
+                    } else {
+                        Log.e(TAG, "postUtilisateur response.body is NULL");
                     }
+                } else {
+                    Log.e(TAG, "postUtilisateur response is not Successful");
+                    Log.e(TAG, response.message());
+                    Log.e(TAG, response.code() + " ");
+                    Log.e(TAG, response.toString() + " ");
                 }
             }
 
             @Override
-            public void onFailure(Call<Utilisateur> call, Throwable t) {
-
+            public void onFailure(Call<List<Utilisateur>> call, Throwable t) {
+                Log.e(TAG, "postUtilisateur FAILED: " + t.getMessage() + " " + t.toString());
+                Toast.makeText(RegisterUtilisateurActivity.this,
+                        "Echec d'enregistrement, vérifier la connexion et réesayer", Toast.LENGTH_LONG).show();
             }
         });
+    }
 
+    /**
+     * Poste L'utilisateur(TCV) en ligne, et si l'utilisateur est enregistre en ligne avec succes, nous
+     * retourne l'utilisateur qu'on enregistre dans la base des donnees
+     * @param utilisateurs
+     */
+    public void postUtilisateurTCV(List<Utilisateur> utilisateurs){
+        mobileApiInterface.postUtilisateurTCV(utilisateurs).enqueue(new Callback<List<Utilisateur>>() {
+            @Override
+            public void onResponse(Call<List<Utilisateur>> call, Response<List<Utilisateur>> response) {
+
+                List<Utilisateur> utilisateurs1 = new ArrayList<>();
+                if (response.isSuccessful()) {
+                    if(response.body() != null) {
+                        utilisateurs1 = response.body();
+
+                        saveInDB(utilisateurs1.get(0));
+
+                        // Creation TCV avec succes
+                        Log.e(TAG, "onResponse: TCV avec code: " + utilisateurs1.get(0).codeUtilisateur);
+                        Toast.makeText(RegisterUtilisateurActivity.this, "Utilisateur TCV ajouté", Toast.LENGTH_SHORT).show();
+                        RegisterUtilisateurActivity.this.finish();
+
+                    } else {
+                        Log.e(TAG, "postUtilisateur response.body is NULL");
+                    }
+                } else {
+                    Log.e(TAG, "postUtilisateur response is not Successful");
+                    Log.e(TAG, response.message());
+                    Log.e(TAG, response.code() + " ");
+                    Log.e(TAG, response.toString() + " ");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Utilisateur>> call, Throwable t) {
+                Log.e(TAG, "postUtilisateur FAILED: " + t.getMessage() + " " + t.toString());
+                Toast.makeText(RegisterUtilisateurActivity.this,
+                        "Echec d'enregistrement, vérifier la connexion et réesayer", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void saveInDB(final Utilisateur utilisateur) {
@@ -192,7 +279,7 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Log.e(TAG, "onPostExecute: Utilisateur insere");
+                Log.e(TAG, "saveInDB : Utilisateur insere dans la base des donnees");
             }
 
             @Override
@@ -209,6 +296,7 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
         mEditor.putString(Constant.KEY_USER_CODE_PROVINCE, mProvince.codeProvince);
         mEditor.putString(Constant.KEY_USER_CODE_TERRITOIRE_VILLE, mTerritoireVille.codeTerritoireVille);
         mEditor.putString(Constant.KEY_USER_CODE_SITE_FORMATION, mSiteFormation.codeSiteFormation);
+        mEditor.putString(Constant.KEY_CODE_UTILISATEUR, utilisateur.codeUtilisateur);
         mEditor.commit();
     }
 
@@ -344,7 +432,7 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
     }
 
     public void populateSiteVote(final SiteFormation siteFormation) {
-        if (siteFormation != null) {
+        if (siteFormation == null) {
             mSiteVoteSP.setAdapter(null);
             return;
         }
@@ -389,7 +477,7 @@ public class RegisterUtilisateurActivity extends AppCompatActivity {
     }
 
     public void populateBureauVote(final SiteVote siteVote) {
-        if (siteVote != null) {
+        if (siteVote == null) {
             mBureauVoteSP.setAdapter(null);
             return;
         }

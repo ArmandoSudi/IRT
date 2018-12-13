@@ -5,5 +5,5 @@ package com.rainbow.irt.service;
  */
 public class Config {
 
-    public static final String BASE_URL = "http://192.168.88.16:90/utilityws/";
+    public static final String BASE_URL = "http://xprojeteam-001-site1.ctempurl.com/utilityws/";
 }

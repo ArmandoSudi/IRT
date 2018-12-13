@@ -36,4 +36,9 @@ public class BureauVote {
         this.codeSiteVote = codeSiteVote;
         this.centreVote = centreVote;
     }
+
+    @Override
+    public String toString() {
+        return this.libelle;
+    }
 }

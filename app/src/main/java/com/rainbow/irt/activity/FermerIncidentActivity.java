@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,6 +36,9 @@ public class FermerIncidentActivity extends AppCompatActivity {
     ImageView mCalendarIV;
     Incident mIncident;
 
+    String mCodeEquipement;
+    boolean mIsAffected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,8 @@ public class FermerIncidentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int codeIncident = intent.getIntExtra(Constant.KEY_CODE_INCIDENT, -1);
+        mCodeEquipement = intent.getStringExtra(Constant.KEY_CODE_EQUIPEMENT);
+        mIsAffected = intent.getBooleanExtra(Constant.KEY_IS_AFFECTED, false);
 
         if (codeIncident >= 0) {
             loadIncident(codeIncident);
@@ -121,8 +127,11 @@ public class FermerIncidentActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Toast.makeText(FermerIncidentActivity.this, "Incident ferme", Toast.LENGTH_SHORT).show();
-                FermerIncidentActivity.this.finish();
+                Log.d(TAG, "Incident ferme");
+                Intent intent = new Intent(FermerIncidentActivity.this, DetailsEquipementActivity.class);
+                intent.putExtra(Constant.KEY_CODE_EQUIPEMENT, mCodeEquipement);
+                intent.putExtra(Constant.KEY_IS_AFFECTED, mIsAffected);
+                FermerIncidentActivity.this.startActivity(intent);
             }
 
             @Override

@@ -60,14 +60,17 @@ public interface MobileApiInterface {
     @POST("post/affecation/")
     public Call<List<BureauVoteEquipement>> postBureauVoteEquipement(@Body List<BureauVoteEquipement> bureauVoteEquipements);
 
-    @POST("post/utilisateur/")
+    @POST("saveUtilisateur")
     public Call<Utilisateur> postUtilisateur(@Body Utilisateur utilisateur);
 
+    @POST("savel1/")
+    public Call<List<Utilisateur>> postUtilisateurL1(@Body List<Utilisateur> utilisateur);
+
+    @POST("savetcv/")
+    public Call<List<Utilisateur>> postUtilisateurTCV(@Body List<Utilisateur> utilisateurs);
 
     @POST("savetcv/")
     public Call<List<Utilisateur>> postUtilisateurs(@Body List<Utilisateur> utilisateurs);
 
-    @POST("post/utilisateur_tcv/")
-    public Call<List<UtilisateurTCV>> postUtilisateurTCV(@Body List<UtilisateurTCV> utilisateurTCVS);
 
 }

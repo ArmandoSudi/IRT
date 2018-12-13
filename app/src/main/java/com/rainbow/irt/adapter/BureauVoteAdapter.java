@@ -3,6 +3,7 @@ package com.rainbow.irt.adapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rainbow.irt.R;
+import com.rainbow.irt.activity.DetailsEquipementActivity;
 import com.rainbow.irt.database.IrtDatabase;
 import com.rainbow.irt.entite.BureauVote;
 import com.rainbow.irt.entite.BureauVoteEquipement;
+import com.rainbow.irt.utils.Constant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +34,7 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
     Activity mActivity;
     List<BureauVote> mBureauVoteList = new ArrayList<>();
     String mCodeEquipement;
+    boolean mIsAffected;
     private Calendar mCalendar = Calendar.getInstance();
 
     static class VH extends RecyclerView.ViewHolder {
@@ -42,10 +46,11 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
         }
     }
 
-    public BureauVoteAdapter(Activity activity, List<BureauVote> bureauVotes, String codeEquipement) {
+    public BureauVoteAdapter(Activity activity, List<BureauVote> bureauVotes, String codeEquipement, boolean isAffected) {
         this.mActivity = activity;
         this.mBureauVoteList = bureauVotes;
         this.mCodeEquipement = codeEquipement;
+        this.mIsAffected = isAffected;
     }
 
 
@@ -86,7 +91,6 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
         Date dateAffecation = mCalendar.getTime();
         BureauVoteEquipement affectation = new BureauVoteEquipement(codeEquipement, codeBureauVote, dateAffecation);
         saveAffecation(affectation);
-        mActivity.finish();
     }
 
     public void addAll(List<BureauVote> bureauVotes){
@@ -108,6 +112,10 @@ public class BureauVoteAdapter extends RecyclerView.Adapter<BureauVoteAdapter.VH
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 Toast.makeText(mActivity, "Equipement affecte", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mActivity, DetailsEquipementActivity.class);
+                intent.putExtra(Constant.KEY_CODE_EQUIPEMENT, mCodeEquipement);
+                intent.putExtra(Constant.KEY_IS_AFFECTED, mIsAffected);
+                mActivity.startActivity(intent);
             }
 
             @Override
